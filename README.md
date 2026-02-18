@@ -9,7 +9,7 @@ Built as a portfolio project across five development phases, progressing from a 
 
 ## Live Demo
 
-> Open 
+> Open https://supply-chain-command.vercel.app/
 ---
 
 ## Project Structure
