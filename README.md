@@ -120,7 +120,7 @@ Under a ×2.5 demand shock (COVID scenario) with Naïve policy and factory lead 
 
 ## Features by Phase
 
-### Phase 1+2 — Engine & Policies (`supply-chain-sim.jsx`)
+### Phase 1+2 — Engine & Policies 
 - `Pipeline` class: FIFO queue representing physical lead-time delay
 - `Agent` class: autonomous state machine with inventory, backlog, and policy execution
 - Correct tick sequencing: goods received → demand fulfilled → order decided → pipeline advanced
@@ -128,18 +128,18 @@ Under a ×2.5 demand shock (COVID scenario) with Naïve policy and factory lead 
 - Live bullwhip ratio computed via coefficient of variation
 - Three Recharts panels: inventory levels, orders placed, backlog pressure
 
-### Phase 3 — Dashboard (`supply-chain-sim-v2.jsx`)
+### Phase 3 — Dashboard
 - Animated SVG flow diagram with `animateMotion` particles between tiers
 - Policy Comparison tab: runs all four policies simultaneously on any scenario
 - Radar chart, bullwhip bar chart, overlay order chart
 - Four scenario presets: COVID Shock ⚡, Seasonal Ramp 🌊, Stable Baseline —, Noise Storm 〜
 - CSV export for both live simulation data and comparison results
 
-### Phase 4 — Analysis & Persistence (`supply-chain-sim-v3.jsx`)
+### Phase 4 — Analysis & Persistence 
 - **Run History**: `window.storage` persistence — all completed simulations auto-saved at tick 100, survive page reloads, viewable and deletable
 - **Intelligence Report**: six-section written analysis generated entirely from live simulation numbers — Executive Summary, Bullwhip Mechanics, Policy Findings, Quantified Value of Information Sharing, Managerial Recommendations, Methodology — exportable as `.txt`
 
-### Phase 5 — Sensitivity & Heatmap (`supply-chain-sim-v3.jsx`)
+### Phase 5 — Sensitivity & Heatmap 
 - **Sensitivity Analysis**: sweeps shock magnitude ×1.1 → ×4.0 in nine steps across all four policies (36 total simulation runs); visualises nonlinear bullwhip scaling
 - **Policy × Scenario Heatmap**: full 4×4 matrix (16 simulations); each cell shows factory bullwhip ratio with semantic colour coding (green → red)
 - Staggered page-load animation; tab transitions with `fadeIn`
@@ -163,7 +163,7 @@ Fonts loaded from Google Fonts at runtime (no installation required):
 
 ---
 
-## Running Locally
+## Run Locally
 
 ###Vite + React
 ```bash
