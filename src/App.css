@@ -1,0 +1,300 @@
+/* =========================================
+   GLOBAL & VARS
+   ========================================= */
+:root {
+  --sc-bg-dark: #070b17;
+  --sc-text-main: #e2e8f0;
+  --sc-border-light: rgba(255, 255, 255, 0.06);
+  --sc-border-highlight: rgba(255, 255, 255, 0.2);
+  --sc-accent: #f59e0b;       /* Amber */
+  --sc-accent-dim: rgba(245, 158, 11, 0.15);
+  --sc-danger: #ef4444;
+  --sc-success: #22c55e;
+  --sc-info: #38bdf8;
+  --sc-font-mono: 'IBM Plex Mono', monospace;
+  --sc-font-display: 'Bebas Neue', cursive;
+}
+
+/* Reset & Basics */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+.sc-app {
+  min-height: 100vh;
+  background: var(--sc-bg-dark);
+  color: var(--sc-text-main);
+  position: relative;
+  overflow: hidden;
+  font-family: var(--sc-font-mono);
+  transition: opacity 0.5s ease;
+}
+
+.sc-app.loading { opacity: 0; }
+.sc-app.loaded { opacity: 1; }
+
+/* Background Effects */
+.sc-bg-scanlines {
+  position: fixed; inset: 0; pointer-events: none; z-index: 1;
+  background-image: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.04) 2px, rgba(0,0,0,0.04) 4px);
+}
+.sc-bg-grid {
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background-image: linear-gradient(rgba(245,158,11,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(245,158,11,0.02) 1px, transparent 1px);
+  background-size: 44px 44px;
+}
+.sc-bg-glow-tr {
+  position: fixed; top: 0; right: 0; width: 500px; height: 400px; z-index: 0; pointer-events: none;
+  background: radial-gradient(circle at top right, rgba(245,158,11,0.04) 0%, transparent 65%);
+}
+.sc-bg-glow-bl {
+  position: fixed; bottom: 0; left: 0; width: 400px; height: 350px; z-index: 0; pointer-events: none;
+  background: radial-gradient(circle at bottom left, rgba(56,189,248,0.022) 0%, transparent 65%);
+}
+
+.sc-container {
+  position: relative; z-index: 2; max-width: 1440px; margin: 0 auto; padding: 0 20px;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(245,158,11,0.25); border-radius: 2px; }
+
+/* Animations */
+@keyframes sc-blink { 0%,100%{opacity:1} 50%{opacity:0.35} }
+@keyframes sc-fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:none} }
+
+.sc-anim-fade-in { animation: sc-fadeIn 0.3s ease both; }
+
+/* =========================================
+   HEADER
+   ========================================= */
+.sc-header {
+  border-bottom: 1px solid var(--sc-border-light);
+  padding: 16px 0 12px;
+  display: flex; alignItems: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+}
+.sc-title {
+  font-family: var(--sc-font-display); font-size: 30px; letter-spacing: 0.1em; color: var(--sc-accent); line-height: 1;
+}
+.sc-subtitle {
+  font-size: 9px; color: rgba(255,255,255,0.2); letter-spacing: 0.16em; margin-top: 3px;
+}
+.sc-header-controls { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+
+.sc-shock-badge {
+  font-size: 10px; padding: 4px 10px; border: 1px solid rgba(255,255,255,0.07); color: rgba(255,255,255,0.2);
+}
+.sc-shock-badge.active {
+  color: var(--sc-danger); border-color: var(--sc-danger); background: rgba(239,68,68,0.05);
+  animation: sc-blink 1.3s infinite;
+}
+.sc-complete-badge {
+  font-size: 9px; color: var(--sc-success); border: 1px solid rgba(34,197,94,0.28);
+  padding: 4px 8px; background: rgba(34,197,94,0.05);
+}
+.sc-tick-display { font-size: 10px; color: rgba(255,255,255,0.2); }
+.sc-tick-val { color: var(--sc-accent); font-size: 16px; font-weight: 700; }
+
+/* =========================================
+   TABS
+   ========================================= */
+.sc-tab-row {
+  display: flex; border-bottom: 1px solid var(--sc-border-light); overflow-x: auto;
+}
+.sc-tab-btn {
+  font-family: var(--sc-font-display); font-size: 12px; letter-spacing: 0.14em;
+  padding: 10px 18px; cursor: pointer; border: none; background: transparent;
+  color: rgba(255,255,255,0.26); border-bottom: 2px solid transparent;
+  transition: all 0.18s; white-space: nowrap;
+}
+.sc-tab-btn:hover { color: rgba(255,255,255,0.5); }
+.sc-tab-btn.active {
+  color: var(--sc-accent); border-bottom-color: var(--sc-accent); background: rgba(245,158,11,0.05);
+}
+
+/* =========================================
+   LAYOUT (Live Sim)
+   ========================================= */
+.sc-sim-layout {
+  display: grid; grid-template-columns: 230px 1fr; min-height: calc(100vh - 100px);
+}
+.sc-sidebar {
+  border-right: 1px solid rgba(255,255,255,0.05); padding: 14px 14px 14px 0; overflow-y: auto;
+}
+.sc-main-content {
+  padding: 14px 0 14px 16px; overflow-y: auto;
+}
+
+/* Sidebar Elements */
+.sc-sidebar-header {
+  font-family: var(--sc-font-display); font-size: 11px; letter-spacing: 0.2em;
+  color: rgba(255,255,255,0.24); margin-bottom: 8px;
+}
+.sc-divider { border-top: 1px solid rgba(255,255,255,0.05); margin: 12px 0; }
+
+.sc-scenario-btn {
+  display: block; width: 100%; text-align: left; margin-bottom: 5px; padding: 7px 10px;
+  font-family: var(--sc-font-mono); font-size: 9px; cursor: pointer; border-radius: 2px;
+  background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06);
+  color: rgba(255,255,255,0.48); transition: background 0.2s;
+}
+.sc-scenario-btn:hover { background: rgba(255,255,255,0.05); }
+
+.sc-ctrl-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-bottom: 10px; }
+.sc-ctrl-btn {
+  font-family: var(--sc-font-mono); font-size: 9px; font-weight: 700; padding: 7px 4px;
+  cursor: pointer; border-radius: 2px; transition: filter 0.2s;
+}
+.sc-ctrl-btn:hover:not(:disabled) { filter: brightness(1.15); }
+.sc-ctrl-btn:disabled { cursor: not-allowed; opacity: 0.5; }
+
+.sc-export-btn {
+  display: block; width: 100%; font-family: var(--sc-font-mono); font-size: 9px;
+  padding: 6px; margin-bottom: 4px; cursor: pointer; border-radius: 2px;
+  background: rgba(56,189,248,0.06); border: 1px solid rgba(56,189,248,0.24); color: var(--sc-info);
+}
+
+/* Sliders & Policies */
+.sc-input-group { margin-bottom: 9px; }
+.sc-input-label {
+  display: flex; justify-content: space-between; font-size: 9px;
+  color: rgba(255,255,255,0.35); margin-bottom: 3px;
+}
+.sc-input-val { color: var(--sc-accent); }
+.sc-range { width: 100%; height: 3px; accent-color: var(--sc-accent); cursor: pointer; }
+
+.sc-policy-group { margin-bottom: 12px; }
+.sc-policy-title {
+  font-size: 9px; color: rgba(255,255,255,0.35); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 5px;
+}
+.sc-policy-opt {
+  display: flex; alignItems: center; gap: 8px; cursor: pointer; padding: 5px 8px; margin-bottom: 3px;
+  border: 1px solid transparent; border-radius: 2px; transition: all 0.15s;
+}
+.sc-policy-opt.active { background: rgba(245,158,11,0.06); } /* Dynamic color override in JS mostly */
+.sc-policy-text { font-size: 10px; }
+
+/* =========================================
+   VISUALIZATIONS
+   ========================================= */
+.sc-flow-diagram {
+  margin-bottom: 14px; background: rgba(0,0,0,0.2);
+  border: 1px solid rgba(255,255,255,0.05); padding: 10px 14px;
+}
+.sc-flow-header {
+  font-family: var(--sc-font-display); font-size: 11px; letter-spacing: 0.2em;
+  color: rgba(255,255,255,0.3); margin-bottom: 6px;
+}
+.sc-shock-text { color: var(--sc-danger); margin-left: 10px; animation: sc-blink 1.2s infinite; }
+
+.sc-stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 12px; }
+.sc-stat-card {
+  background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);
+  padding: 11px 14px; overflow: hidden; border-left-width: 3px; border-left-style: solid;
+}
+.sc-stat-label { font-size: 9px; color: rgba(255,255,255,0.35); letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 3px; }
+.sc-stat-val { font-size: 20px; font-weight: 700; lineHeight: 1; }
+.sc-stat-unit { font-size: 11px; margin-left: 3px; color: rgba(255,255,255,0.4); }
+.sc-stat-sub { font-size: 9px; color: rgba(255,255,255,0.25); margin-top: 3px; }
+
+.sc-bullwhip-panel {
+  background: rgba(255,255,255,0.015); border: 1px solid rgba(255,255,255,0.06);
+  padding: 12px 14px; margin-bottom: 12px;
+}
+.sc-panel-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.sc-panel-title { font-family: var(--sc-font-display); fontSize: 12px; letter-spacing: 0.2em; color: rgba(255,255,255,0.36); }
+.sc-panel-sub { font-size: 9px; color: rgba(255,255,255,0.16); }
+
+.sc-bw-bar-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+.sc-bw-bar-row { display: flex; justify-content: space-between; font-size: 10px; margin-bottom: 3px; }
+.sc-bw-track { height: 5px; background: rgba(255,255,255,0.06); border-radius: 2px; overflow: hidden; }
+.sc-bw-fill { height: 100%; transition: width 0.4s ease; }
+
+.sc-chart-panel {
+  background: rgba(255,255,255,0.015); border: 1px solid rgba(255,255,255,0.06);
+  padding: 12px 14px; margin-bottom: 12px;
+}
+.sc-chart-tooltip {
+  background: #080c18; border: 1px solid rgba(255,255,255,0.1); padding: 8px 12px; font-size: 10px;
+}
+.sc-footer-note {
+  font-size: 8px; color: rgba(255,255,255,0.1); border-top: 1px solid rgba(255,255,255,0.04);
+  padding-top: 10px; margin-top: 4px;
+}
+
+/* =========================================
+   COMPARISON & ANALYSIS TABLES
+   ========================================= */
+.sc-content-pad { padding: 16px 0; }
+.sc-comp-header { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; align-items: flex-end; }
+.sc-comp-btn-group { display: flex; gap: 6px; flex-wrap: wrap; }
+.sc-action-btn {
+  font-family: var(--sc-font-mono); font-size: 10px; font-weight: 700; padding: 9px 18px;
+  cursor: pointer; border-radius: 2px; transition: all 0.2s;
+}
+.sc-action-btn.primary {
+  background: var(--sc-accent-dim); border: 1px solid var(--sc-accent); color: var(--sc-accent);
+}
+.sc-action-btn.computing { opacity: 0.6; cursor: wait; }
+
+.sc-table { width: 100%; border-collapse: collapse; font-family: var(--sc-font-mono); font-size: 11px; margin-bottom: 14px; }
+.sc-table th {
+  text-align: center; padding: 8px 10px; font-size: 10px; font-weight: 700;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.sc-table th:first-child { text-align: left; font-weight: 400; color: rgba(255,255,255,0.28); }
+.sc-table td { padding: 9px 10px; border-bottom: 1px solid rgba(255,255,255,0.04); }
+.sc-table tr:nth-child(even) { background: rgba(255,255,255,0.01); }
+.sc-table-label { color: rgba(255,255,255,0.38); font-size: 9px; letter-spacing: 0.05em; }
+
+.sc-badge {
+  display: inline-block; padding: 2px 8px; border-radius: 2px; font-weight: 700;
+}
+.sc-badge-best { background: rgba(34,197,94,0.11); border: 1px solid rgba(34,197,94,0.32); color: var(--sc-success); }
+.sc-badge-worst { background: rgba(239,68,68,0.09); border: 1px solid rgba(239,68,68,0.22); color: var(--sc-danger); }
+.sc-badge-neutral { color: rgba(255,255,255,0.65); border: 1px solid transparent; }
+
+.sc-split-view { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+
+/* Heatmap Grid */
+.sc-heatmap-cell {
+  display: inline-block; padding: 6px 14px; border-radius: 2px; min-width: 64px;
+}
+.sc-heatmap-val { font-size: 14px; font-weight: 700; }
+
+/* =========================================
+   REPORT & HISTORY
+   ========================================= */
+.sc-empty-state {
+  text-align: center; padding: 50px; border: 1px dashed rgba(255,255,255,0.07);
+  font-size: 11px; color: rgba(255,255,255,0.18);
+}
+
+.sc-report-wrap { max-width: 780px; }
+.sc-report-header { border-bottom: 2px solid rgba(245,158,11,0.5); padding-bottom: 16px; margin-bottom: 28px; }
+.sc-report-h1 { font-family: var(--sc-font-display); font-size: 30px; letter-spacing: 0.08em; color: var(--sc-accent); line-height: 1; }
+.sc-report-meta { font-size: 9px; color: rgba(255,255,255,0.3); margin-top: 6px; letter-spacing: 0.1em; }
+.sc-report-section { margin-bottom: 32px; }
+.sc-report-h2-row { display: flex; alignItems: center; gap: 10px; margin-bottom: 10px; }
+.sc-report-bar { width: 3px; height: 20px; background: var(--sc-accent); opacity: 0.65; border-radius: 1px; flex-shrink: 0; }
+.sc-report-h2 { font-family: var(--sc-font-display); font-size: 14px; letter-spacing: 0.14em; color: rgba(255,255,255,0.8); }
+.sc-report-text {
+  font-size: 10px; color: rgba(255,255,255,0.52); line-height: 2; white-space: pre-line;
+  padding-left: 13px; border-left: 1px solid rgba(255,255,255,0.06);
+}
+
+.sc-history-item {
+  background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.07);
+  padding: 12px 14px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+.sc-history-info { flex: 1; min-width: 180px; }
+.sc-history-title { font-family: var(--sc-font-display); font-size: 13px; color: rgba(255,255,255,0.7); letter-spacing: 0.08em; margin-bottom: 3px; }
+.sc-history-sub { font-size: 9px; color: rgba(255,255,255,0.28); }
+.sc-history-metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; min-width: 230px; }
+.sc-history-label { font-size: 8px; color: rgba(255,255,255,0.25); text-transform: uppercase; margin-bottom: 2px; }
+.sc-history-val { font-size: 13px; font-weight: 700; }
+.sc-history-actions { display: flex; gap: 6px; }
+.sc-btn-small {
+  font-family: var(--sc-font-mono); font-size: 9px; padding: 5px 10px; cursor: pointer; border-radius: 2px;
+}
